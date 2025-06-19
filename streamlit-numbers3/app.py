@@ -1,11 +1,37 @@
 
 import streamlit as st
 import pandas as pd
+import logging
+
 from numbers3_predictor import main_with_improved_predictions
 
+# --- ログ設定 ---
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.debug("Streamlit アプリ起動中...")
+
+# --- モジュール確認ログ ---
+try:
+    import torch
+    logger.info(f"Torch バージョン: {torch.__version__}")
+except Exception as e:
+    logger.error(f"Torch の読み込み失敗: {e}")
+
+try:
+    import neuralforecast
+    logger.info("NeuralForecast 読み込み成功")
+except Exception as e:
+    logger.error(f"NeuralForecast の読み込み失敗: {e}")
+
+try:
+    import onnxruntime
+    logger.info(f"ONNXRuntime バージョン: {onnxruntime.__version__}")
+except Exception as e:
+    logger.error(f"ONNXRuntime の読み込み失敗: {e}")
+
+# --- ページ設定 ---
 st.set_page_config(page_title="Numbers3予測AI", layout="centered")
 
-# --- スタイル（1回だけ描画） ---
 if "css_loaded" not in st.session_state:
     st.markdown("""
     <style>
@@ -35,7 +61,6 @@ if "css_loaded" not in st.session_state:
     """, unsafe_allow_html=True)
     st.session_state["css_loaded"] = True
 
-# --- タイトル ---
 st.title("🎯 Numbers3 予測AI")
 
 # --- 最新予測表示 ---
@@ -49,7 +74,8 @@ try:
             numbers = latest[f"予測{i}"]
             confidence = latest[f"信頼度{i}"]
             source = latest.get(f"出力元{i}", "AI")
-        except:
+        except Exception as e:
+            logger.warning(f"予測{i} の読み込み失敗: {e}")
             continue
 
         if confidence >= 0.94:
@@ -76,12 +102,17 @@ try:
             """, unsafe_allow_html=True)
 
 except Exception as e:
+    logger.error(f"最新予測の表示中にエラー: {e}")
     st.warning("⚠️ まだ予測が実行されていません。")
 
 # --- 再予測ボタン ---
 st.markdown("---")
 if st.button("📈 予測を再実行する"):
     with st.spinner("予測中..."):
-        main_with_improved_predictions()
+        try:
+            main_with_improved_predictions()
+        except Exception as e:
+            logger.exception("予測処理中にエラーが発生しました")
+            st.error("❌ 予測中にエラーが発生しました")
     st.success("✅ 予測が更新されました。ページを再読み込みしています...")
     st.experimental_rerun()
