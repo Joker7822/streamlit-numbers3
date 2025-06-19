@@ -1,6 +1,4 @@
-# 不要な asyncio を削除
 aiohttp
-autogluon==0.8.2
 beautifulsoup4
 catboost
 gym
@@ -15,5 +13,5 @@ requests
 scikit-learn
 statsmodels
 streamlit
-torch==1.13.1  # autogluon==0.8.2 に合わせる
+torch==1.13.1
 xgboost
