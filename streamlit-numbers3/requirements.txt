@@ -1,12 +1,11 @@
 aiohttp
+autogluon==0.7.0
 beautifulsoup4
 catboost
-gym
 lightgbm
 matplotlib
 neuralforecast
 numpy
-onnxruntime
 optuna
 pandas
 requests
