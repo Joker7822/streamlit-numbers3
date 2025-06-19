@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from numbers3_predictor import main_with_improved_predictions
@@ -64,7 +65,8 @@ try:
             grade = "はずれ"
             badge_class = "miss"
 
-        with st.container():
+        placeholder = st.empty()
+        with placeholder.container():
             st.markdown(f"""
             <div class="card">
                 <h3>🎱 予測{i}: <code>{numbers}</code></h3>
@@ -81,4 +83,5 @@ st.markdown("---")
 if st.button("📈 予測を再実行する"):
     with st.spinner("予測中..."):
         main_with_improved_predictions()
-    st.success("✅ 予測が更新されました。ページを再読み込みしてください。")
+    st.success("✅ 予測が更新されました。ページを再読み込みしています...")
+    st.experimental_rerun()
