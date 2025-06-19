@@ -1506,7 +1506,26 @@ def evaluate_and_summarize_predictions(
 
     print(f"[INFO] 集計結果を {output_txt} に出力しました（{len(all_hits)} 件の的中）")
 
+def weekly_retrain_all_models():
+    df = pd.read_csv("numbers3.csv")
+    df["本数字"] = df["本数字"].apply(parse_number_string)
+    df = df[df["本数字"].apply(lambda x: len(x) == 3)]
+    df["抽せん日"] = pd.to_datetime(df["抽せん日"])
+    df = df.sort_values("抽せん日").reset_index(drop=True)
+
+    train_diffusion_model(df)
+    train_transformer_with_cycle_attention(df)
+    train_gpt3numbers_model_with_memory(save_path="gpt3numbers.pth", encoder_path="memory_encoder_3.pth")
+    print("[INFO] すべてのモデルを再学習しました（土曜日処理）")
+
 def main_with_improved_predictions():
+        # === 土曜日のみ再学習 ===
+    if datetime.today().weekday() == 5:  # 土曜日: 0(月)〜6(日)
+        print("[INFO] 土曜日のため全モデルを再学習します")
+        weekly_retrain_all_models()
+    else:
+        print("[INFO] 平日のためモデルは再学習しません")
+
     try:
         df = pd.read_csv("numbers3.csv")
         df["抽せん日"] = pd.to_datetime(df["抽せん日"], errors='coerce')
@@ -1945,6 +1964,13 @@ def generate_via_diffusion(recent_real_numbers, top_k=5):
     return [x[0] for x in scored[:top_k]]
 
 def bulk_predict_all_past_draws():
+            # === 土曜日のみ再学習 ===
+    if datetime.today().weekday() == 5:  # 土曜日: 0(月)〜6(日)
+        print("[INFO] 土曜日のため全モデルを再学習します")
+        weekly_retrain_all_models()
+    else:
+        print("[INFO] 平日のためモデルは再学習しません")
+
     try:
         df = pd.read_csv("numbers3.csv")
         df["抽せん日"] = pd.to_datetime(df["抽せん日"], errors='coerce')
