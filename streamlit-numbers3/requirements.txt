@@ -1,29 +1,19 @@
-# ベース
-streamlit>=1.25
-pandas
-numpy
-requests
-
-# 機械学習・統計系
-scikit-learn
-xgboost
-lightgbm
-catboost
-optuna
-statsmodels
-matplotlib
-
-# モデル関連
-torch==1.13.1
-onnxruntime
-
-# 時系列予測
-neuralforecast
-
-# Webスクレイピング・環境
-beautifulsoup4
+# 不要な asyncio を削除
 aiohttp
-gym
-
-# AutoML（バージョン制約注意）
 autogluon==0.8.2
+beautifulsoup4
+catboost
+gym
+lightgbm
+matplotlib
+neuralforecast
+numpy
+onnxruntime
+optuna
+pandas
+requests
+scikit-learn
+statsmodels
+streamlit
+torch==1.13.1  # autogluon==0.8.2 に合わせる
+xgboost
