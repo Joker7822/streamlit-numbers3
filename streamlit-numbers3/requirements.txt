@@ -4,7 +4,7 @@ catboost
 gym
 lightgbm
 matplotlib
-neuralforecast
+neuralforecast==1.5.0
 numpy
 onnxruntime
 optuna
@@ -13,5 +13,5 @@ requests
 scikit-learn
 statsmodels
 streamlit
-torch==1.13.1
+torch>=2.0.0
 xgboost
