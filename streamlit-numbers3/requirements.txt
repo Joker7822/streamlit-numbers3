@@ -16,3 +16,4 @@ streamlit
 torch>=2.0.0
 xgboost
 stable-baselines3
+autogluon==0.8.2
