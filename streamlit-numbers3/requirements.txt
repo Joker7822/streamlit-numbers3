@@ -13,7 +13,7 @@ requests
 scikit-learn
 statsmodels
 streamlit
-torch>=2.0.0
+torch==1.13.1
 xgboost
 stable-baselines3
 autogluon==0.8.2
