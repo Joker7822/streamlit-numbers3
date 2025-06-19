@@ -39,15 +39,13 @@ st.title("🎯 Numbers3 予測AI")
 try:
     df = pd.read_csv("numbers3_predictions.csv")
     latest = df.sort_values("抽せん日", ascending=False).iloc[-1]
-
-    st.markdown("## 📌 最新予測（" + latest["抽せん日"] + "）")
+    st.subheader(f"📌 最新予測（{latest['抽せん日']}）")
 
     for i in range(1, 6):
         numbers = latest[f"予測{i}"]
         confidence = latest[f"信頼度{i}"]
         source = latest.get(f"出力元{i}", "AI")
 
-        # 等級予測色バッジ（仮で信頼度で分類）
         if confidence >= 0.94:
             grade = "ストレート"
             badge_class = "straight"
@@ -61,13 +59,14 @@ try:
             grade = "はずれ"
             badge_class = "miss"
 
-        st.markdown(f"""
-        <div class="card">
-            <h3>🎱 予測{i}: <code>{numbers}</code></h3>
-            <div class="badge {badge_class}">{grade}</div>
-            <span>信頼度: <b>{confidence:.3f}</b>｜出力元: {source}</span>
-        </div>
-        """, unsafe_allow_html=True)
+        with st.container():
+            st.markdown(f"""
+            <div class="card">
+                <h3>🎱 予測{i}: <code>{numbers}</code></h3>
+                <div class="badge {badge_class}">{grade}</div>
+                <span>信頼度: <b>{confidence:.3f}</b>｜出力元: {source}</span>
+            </div>
+            """, unsafe_allow_html=True)
 
 except Exception as e:
     st.warning("まだ予測が実行されていません。")
